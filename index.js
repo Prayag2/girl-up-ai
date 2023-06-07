@@ -15,8 +15,11 @@ const {
 	getBlog,
 	likeBlogPost,
 } = require('./controllers/blog');
+const cors = require('cors');
 
 const port = 4002 || process.env.API_PORT;
+
+app.use(cors());
 
 app.post('/register', signup);
 
