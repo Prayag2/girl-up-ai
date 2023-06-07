@@ -19,7 +19,11 @@ const cors = require('cors');
 
 const port = 4002 || process.env.API_PORT;
 
-app.use(cors());
+app.use(
+	cors({
+		origin: '*',
+	}),
+);
 
 app.post('/register', signup);
 
