@@ -2,6 +2,56 @@ const { consola } = require("consola");
 const Blog = require("../models/blog");
 const User = require("../models/user");
 
+exports.getNotApproved = async (req, res) => {
+    try {
+        let blogs = await Blog.find({ approved: false });
+
+        return res.status(200).send({ blogs });
+    } catch (err) {
+        consola.error(err.message);
+    }
+};
+
+exports.approve = async (req, res) => {
+    try {
+        await Blog.find({ approved: false, _id: req.body.id })
+            .updateOne({
+                approved: true,
+            })
+            .exec();
+
+        return res.status(200).send({ msg: "approved" });
+    } catch (err) {
+        consola.error(err.message);
+    }
+};
+
+exports.remove = async (req, res) => {
+    try {
+        await Blog.findOneAndRemove({
+            approved: true,
+            _id: req.body.id,
+        }).exec();
+
+        return res.status(200).send({ msg: "removed" });
+    } catch (err) {
+        consola.error(err.message);
+    }
+};
+
+exports.reject = async (req, res) => {
+    try {
+        await Blog.findOneAndRemove({
+            approved: false,
+            _id: req.body.id,
+        }).exec();
+
+        return res.status(200).send({ msg: "rejected and removed" });
+    } catch (err) {
+        consola.error(err.message);
+    }
+};
+
 exports.addNewBlog = async (req, res) => {
     try {
         const { title, authorId, text } = req.body;
@@ -100,7 +150,7 @@ exports.likeBlogPost = async (req, res) => {
 
 exports.getAllBlogs = async (req, res) => {
     try {
-        let blogs = await Blog.find({});
+        let blogs = await Blog.find({ approved: true });
 
         return res.status(200).send({ blogs });
     } catch (err) {
@@ -111,7 +161,7 @@ exports.getAllBlogs = async (req, res) => {
 exports.getBlog = async (req, res) => {
     try {
         let { id } = req.params;
-        let blogs = await Blog.findById(id);
+        let blogs = await Blog.findOne({ approved: true, _id: id });
 
         return res.status(200).send({ blogs });
     } catch (err) {

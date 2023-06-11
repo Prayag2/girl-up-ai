@@ -14,6 +14,10 @@ const {
     getAllBlogs,
     getBlog,
     likeBlogPost,
+    getNotApproved,
+    approve,
+    reject,
+    remove,
 } = require("./controllers/blog");
 const cors = require("cors");
 
@@ -28,6 +32,14 @@ app.use(
 app.post("/comment-on-blog/:id", verifyToken, commentOnBlog);
 
 app.post("/add-blog", verifyToken, addNewBlog);
+
+app.get("/get-pending", getNotApproved);
+
+app.post("/remove", remove);
+
+app.post("/approve", approve);
+
+app.post("/reject", reject);
 
 app.post("/like-blog", verifyToken, likeBlogPost);
 

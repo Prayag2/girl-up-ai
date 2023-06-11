@@ -9,6 +9,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: null,
     },
+    role: {
+        type: String,
+        default: "User",
+    },
     email: {
         type: String,
         unique: [true, "Email is already taken."],
